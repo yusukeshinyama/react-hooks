@@ -1,0 +1,14 @@
+{
+  "name": "react-hooks",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "author": "Yusuke Shinyama",
+  "license": "ISC",
+  "description": "Hand-made React hooks alike",
+  "devDependencies": {
+    "vitest": "^3.0.7"
+  }
+}
