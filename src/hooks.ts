@@ -7,7 +7,12 @@ export type Context = {
     states: State<any>[]
 }
 
-export const render = (context: Context, component: (context: Context) => any) => {
+let context: Context = {
+    currentState: 0,
+    states: []
+}
+
+export const render = (component: (context: Context) => any) => {
     context.currentState = 0
     if (context.states === undefined) {
         context.states = []
@@ -15,7 +20,7 @@ export const render = (context: Context, component: (context: Context) => any) =
     return component(context)
 }
 
-export const useState = <T>(context: Context, initialValue: T): [T, (_: T)=>void] => {
+export const useState = <T>(initialValue: T): [T, (_: T)=>void] => {
     if (context.states.length <= context.currentState) {
         context.states.push({currentValue: initialValue})
     }
