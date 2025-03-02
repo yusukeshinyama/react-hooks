@@ -1,9 +1,15 @@
-export const useState = <T> (initialValue: T): [()=>T, (_: T)=>void] => {
-    let value: T = initialValue
+export type State<T> = {
+    currentValue?: T
+}
+
+export const useState = <T>(state: State<T>, initialValue: T): [T, (_: T)=>void] => {
+    if (state.currentValue === undefined) {
+        state.currentValue = initialValue
+    }
     return [
-        (): T => value,
+        state.currentValue,
         (changedValue: T) => {
-            value = changedValue
+            state.currentValue = changedValue
         }
     ]
 }
