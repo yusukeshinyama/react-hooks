@@ -1,26 +1,40 @@
-export type State<T> = {
+type State<T> = {
     currentValue?: T
 }
 
-export type Context = {
+type Context = {
     currentState: number,
     states: State<any>[]
 }
 
-let context: Context = {
-    currentState: 0,
-    states: []
+type ContextMap = {
+    [key: string]: Context,
 }
 
-export const render = (component: (context: Context) => any) => {
-    context.currentState = 0
-    if (context.states === undefined) {
-        context.states = []
+type GlobalContext = {
+    contexts: ContextMap,
+    currentContext?: Context
+}
+
+let globalContext: GlobalContext = {
+    contexts: {}
+}
+
+export const render = (component: () => any) => {
+    const key = component.toString()
+    if (globalContext.contexts[key] === undefined) {
+        globalContext.contexts[key] = {
+            currentState: 0,
+            states: []
+        }
     }
-    return component(context)
+    globalContext.currentContext = globalContext.contexts[key]
+    globalContext.currentContext.currentState = 0
+    return component()
 }
 
 export const useState = <T>(initialValue: T): [T, (_: T)=>void] => {
+    const context = globalContext.currentContext!
     if (context.states.length <= context.currentState) {
         context.states.push({currentValue: initialValue})
     }

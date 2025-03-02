@@ -56,4 +56,32 @@ describe('useState', () => {
         expect(screen2.valueB).toBe(changedValueB)
     })
 
+    it('Multiple components are independent.', () => {
+        const initialValue = 123;
+        const changedValueA = 456;
+        const changedValueB = 789;
+        const componentA = () => {
+            const [valueA, setValueA] = useState(initialValue)
+            const buttonClickA = () => {
+                setValueA(changedValueA)
+            }
+            return { valueA, buttonClickA }
+        }
+        const componentB = () => {
+            const [valueB, setValueB] = useState(initialValue)
+            const buttonClickB = () => {
+                setValueB(changedValueB)
+            }
+            const { valueA, buttonClickA } = render(componentA)
+            return { valueA, valueB, buttonClickA, buttonClickB }
+        }
+
+        const screen1 = render(componentB)
+        screen1.buttonClickA()
+        screen1.buttonClickB()
+        const screen2 = render(componentB)
+        expect(screen2.valueA).toBe(changedValueA)
+        expect(screen2.valueB).toBe(changedValueB)
+    })
+
 });
