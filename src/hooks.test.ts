@@ -1,5 +1,5 @@
 import {vi, describe, it, expect, afterAll, vitest, afterEach} from "vitest";
-import {useState, render} from "./hooks";
+import {useState, useEffect, render} from "./hooks";
 
 describe('useState', () => {
 
@@ -85,3 +85,40 @@ describe('useState', () => {
     })
 
 });
+
+describe('useEffect', () => {
+
+    it('Gets executed.', () => {
+        const proc = vi.fn()
+        const component = () => {
+            useEffect(() => {
+                proc()
+            }, [])
+        }
+
+        const screen1 = render(component)
+        expect(proc).toHaveBeenCalledTimes(1)
+    })
+
+    it('Gets executed when a dep is changed.', () => {
+        const initialValue = 123;
+        const changedValue = 456;
+        const proc = vi.fn()
+        const component = () => {
+            const [value, setValue] = useState(initialValue)
+            useEffect(() => {
+                proc()
+            }, [value])
+            const buttonClick = () => {
+                setValue(changedValue)
+            }
+            return { value, buttonClick }
+        }
+
+        const screen1 = render(component)
+        expect(proc).toHaveBeenCalledTimes(0)
+        screen1.buttonClick()
+        const screen2 = render(component)
+        expect(proc).toHaveBeenCalledTimes(1)
+    })
+})
