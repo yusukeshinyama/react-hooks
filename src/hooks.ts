@@ -2,7 +2,7 @@ type State<T> = {
     currentValue?: T
 }
 type Effect = {
-    oldValues: any[]
+    oldValues: any
 }
 
 type Context = {
@@ -59,21 +59,20 @@ export const useState = <T>(initialValue: T): [T, (_: T)=>void] => {
     ]
 }
 
-const arrayEquals = (a: any[], b: any[]) => {
+const arrayEquals = (a: any, b: any) => {
+    if (typeof a !== 'object') return false
+    if (typeof b !== 'object') return false
     if (a.length !== b.length) return false
-    return a.every((value, index) => value === b[index])
+    return a.every((value:any, index:number) => value === b[index])
 }
 
 export const useEffect = (proc: () => void, deps: any[]) => {
     const context = globalContext.currentContext!
     if (context.effects.length <= context.currentEffect) {
-        context.effects.push({ oldValues: deps })
+        context.effects.push({ oldValues: undefined })
     }
     const effect = context.effects[context.currentEffect]
     context.currentEffect++
-    if (deps.length === 0) {
-        deps = ["FIRST"]
-    }
     if (!arrayEquals(effect.oldValues, deps)) {
         effect.oldValues = deps
         proc()

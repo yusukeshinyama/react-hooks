@@ -100,6 +100,20 @@ describe('useEffect', () => {
         expect(proc).toHaveBeenCalledTimes(1)
     })
 
+    it('Not executed when the dep is unchanged.', () => {
+        const proc = vi.fn()
+        const component = () => {
+            useEffect(() => {
+                proc()
+            }, [])
+        }
+
+        const screen1 = render(component)
+        expect(proc).toHaveBeenCalledTimes(1)
+        const screen2 = render(component)
+        expect(proc).toHaveBeenCalledTimes(1)
+    })
+
     it('Gets executed when a dep is changed.', () => {
         const initialValue = 123;
         const changedValue = 456;
@@ -116,9 +130,9 @@ describe('useEffect', () => {
         }
 
         const screen1 = render(component)
-        expect(proc).toHaveBeenCalledTimes(0)
+        expect(proc).toHaveBeenCalledTimes(1)
         screen1.buttonClick()
         const screen2 = render(component)
-        expect(proc).toHaveBeenCalledTimes(1)
+        expect(proc).toHaveBeenCalledTimes(2)
     })
 })
