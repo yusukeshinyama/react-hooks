@@ -84,6 +84,28 @@ describe('useState', () => {
         expect(screen2.valueB).toBe(changedValueB)
     })
 
+    it('Custom hooks work too!', () => {
+        const initialValue = 123;
+        const changedValueA = 456;
+        const useFoo = (initialValue, changedValue) => {
+            const [value, setValue] = useState(initialValue)
+            const buttonClick = () => {
+                setValue(changedValueA)
+            }
+            return { value, buttonClick }
+        }
+        const component = () => {
+            const { value, buttonClick } = useFoo(initialValue, changedValueA)
+            return { value, buttonClick }
+        }
+
+        const screen1 = render(component)
+        screen1.buttonClick()
+        const screen2 = render(component)
+        screen2.buttonClick()
+        expect(screen2.value).toBe(changedValueA)
+    })
+
 });
 
 describe('useEffect', () => {
