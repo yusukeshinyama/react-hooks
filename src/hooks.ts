@@ -25,17 +25,27 @@ let globalContext: GlobalContext = {
     contexts: {}
 }
 
+type Function = {
+    _id: number
+}
+
+let _id = 0
+
 export const render = (component: () => any) => {
-    const key = component.toString()
-    if (globalContext.contexts[key] === undefined) {
-        globalContext.contexts[key] = {
+    let id = (component as unknown as Function)._id
+    if (id === undefined) {
+        id = _id++
+        Object.defineProperty(component, '_id', { value: id })
+    }
+    if (globalContext.contexts[id] === undefined) {
+        globalContext.contexts[id] = {
             currentState: 0,
             states: [],
             currentEffect: 0,
             effects: [],
         }
     }
-    globalContext.currentContext = globalContext.contexts[key]
+    globalContext.currentContext = globalContext.contexts[id]
     globalContext.currentContext.currentState = 0
     globalContext.currentContext.currentEffect = 0
     return component()
