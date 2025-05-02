@@ -5,16 +5,16 @@
 「フック (hooks)」の概念は Reactプログラミングにおける基本である。
 ここでは TypeScript を使って、
 Reactの基本的なフック (`useState`と`useEffect`) を TDD で実装してみる。
-ここで使われる手法は本物の React フックとほぼ同じであり、この過程をつうじて
-Reactフックの制限やカスタムフックの仕組みなどを理解することを目的としている。
+ここで使われる手法は本物の React フックとほぼ同じであり、この過程を通じて
+Reactフックの制限や、カスタムフックの仕組みなどを理解することを目的としている。
 
 **注意:** ここで実装するのはフックだけである。
-Virtual DOM などは実装しないので「Reactもどき」として使えるものではない。
+Virtual DOM などは実装しないので「Reactもどき」として使えるものにはならない。
 
 
 ## useState
 
-1. 最初のテスト (`value` は変数でなく関数):
+1. 最初は `useState` が単独で使えるものと仮定し、 `value` は変数でなく関数としている:
 
 ```typescript
 describe('useState', () => {
@@ -38,7 +38,7 @@ describe('useState', () => {
 })
 ```
 
-2. `value`が変数になるよう改良する。
+2. つぎに `value`が変数になるよう改良する。
    `useState`の値は、所属するコンポーネントが再レンダリングされるときに更新されるものとする。
 
 ```typescript
@@ -73,7 +73,7 @@ describe('useState', () => {
 
 })
 ```
-3. 別々の `useState` はそれぞれ独立している。
+3. 別々の `useState` がそれぞれ独立した値をもつようにする。
 
 ```typescript
 describe('useState', () => {
@@ -137,7 +137,8 @@ describe('useState', () => {
 })
 ```
 
-4. 各コンポーネントに `Context` を渡す必要がないようにする。
+4. これまでは各コンポーネントになんらかの状態 (`Context`) を渡す必要があった。
+   今後はその必要がないように仕様変更する。
 
 ```typescript
 describe('useState', () => {
@@ -198,7 +199,7 @@ describe('useState', () => {
 })
 ```
 
-5. 別々のコンポーネントに所属する `useState` はそれぞれ独立している。
+5. さらに、別々のコンポーネントに所属する `useState` はそれぞれ独立した値をもつようにする。
 
 ```typescript
 it('Multiple components are independent.', () => {
@@ -318,3 +319,7 @@ describe('useEffect', () => {
 
 `Object.defineProperty` を使って、コンポーネントの識別を高速化してみよう。
 
+## 参考文献
+
+- "Deep dive: How do React hooks really work?" (https://www.netlify.com/blog/2019/03/11/deep-dive-how-do-react-hooks-really-work/)
+- "Build your own React" (https://pomb.us/build-your-own-react/)
